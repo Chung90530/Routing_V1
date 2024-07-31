@@ -1,0 +1,66 @@
+* {
+    margin: 0;
+    padding: 0;
+    border-radius: 8px;
+}
+
+h2, h3 {
+    color: blue;
+}
+
+h2 {
+    padding: 8px;
+}
+
+.mb-1 {
+    margin-bottom: 8px;
+}
+
+.mb-2 {
+    margin-bottom: 16px;
+}
+
+.mb-7 {
+    margin-bottom: 56px;
+}
+
+.main {
+    padding: 10px 30px;
+}
+
+textarea, .btn {
+    width: 100%;
+}
+
+textarea {
+    padding: 6px;
+}
+
+.btn, .copy {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.flex {
+    display: flex;
+    justify-content: space-between;
+}
+
+.result {
+    outline: 2px solid #333;
+    min-height: 30vh;
+    width: 82vw;
+}
+
+.copy {
+    width: 10vw;
+    font-size: 20px;
+}
+
+.usermessage, .error_block {
+    padding: 10px;
+}
+
+.error_block {
+    background-color:skyblue;
+}

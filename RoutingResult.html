@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/RouteStyle.css">
+</head>
+<body>
+    <div class="main">
+        <h2>Routing 解析</h2>
+
+        <textarea  cols="120" rows="25" class="routingData mb-2"></textarea>
+        
+        <button type="button" class="btn mb-7">送出</button>
+        
+        <div class="showMessage flex">
+            <!-- <div class="result"></div> -->
+            <div class="result usermessage"></div>
+            <button class="copy">複製</button>
+        </div>
+    </div>
+
+    <script src="./js/axios.min.js"></script>
+    <script>
+        (function(){
+            
+            const routingDataDom = document.querySelector('.routingData');
+            const btn = document.querySelector('.btn');
+            const btnCopy = document.querySelector('.copy');
+            let copyText = '';
+
+            btn.addEventListener('click', async () => {
+
+                const routingFinal = [];
+                let glInfo = null;
+                let routeInfo = null;
+
+                document.querySelector('.result').innerHTML = '';
+                
+                btn.setAttribute('disabled', true)
+
+                let content = `[${routingDataDom.value.trim()}]`;
+                
+                content = content.replaceAll('\n',',')
+
+                // const contentObj = JSON.parse(content);
+                // console.log('L: 64  > glInfo: ', glInfo);
+                let  contentObj;
+                try {
+                    contentObj = JSON.parse(content);
+                } catch(err) {
+                    alert('JSON 格式錯誤');
+                    btn.removeAttribute('disabled');
+
+                    return;
+                }
+
+                try{
+                    glInfo = await getGLData();
+
+                    routeInfo = await getRouteData();
+
+                } catch(err) {
+                    console.log('L:54  axios err: ', err);
+                    btn.removeAttribute('disabled');
+
+                    return;
+                }
+
+               
+                const glNAME = glInfo.data;
+                console.log('L: 60  > glNAME: ', glNAME);
+
+                const routeErrorMessage = routeInfo.data;
+
+                for(let i = 0 ; i < contentObj.length ; i++) {
+                    if( contentObj[i].isChanged === true ) {
+                        const changeData = contentObj[i];
+                                              
+                        if(changeData.beforeFilterIdList.length !== changeData.afterFilterIdList.length){
+                            let res = changeData.beforeFilterIdList.filter( num => {
+                                return changeData.afterFilterIdList.indexOf(num) === -1 ;
+                            })
+
+                            console.log('res: ', res);                           
+
+                            const routingLineFail = {}; 
+
+                            routingLineFail['no'] = changeData.no;
+                            routingLineFail['reason'] = changeData.description;
+                            routingLineFail['gl'] = res;
+                            
+                            //組 gateway line name
+                            const failGLNameObj = glNAME.filter( gn => res.indexOf( gn.id) !== -1 )
+                            const failGLNameArr = [];  
+
+                            for (const iterator of failGLNameObj) {
+                                // failGLNameArr.push(iterator.gatewaylinename);
+                                failGLNameArr.push(iterator.gatewayLineName);
+                            }
+
+                            routingLineFail['gl_name'] = failGLNameArr.join('、');
+
+
+                            //組 Route 錯誤訊息                           
+                            let errorReason = routeErrorMessage.filter( errorMes => errorMes.description === changeData.description )
+                            routingLineFail['caption'] = errorReason[0].caption_en;
+                            // console.log('L:96  errorReason: ', errorReason);
+                            // console.log('routingLineFail: ', routingLineFail);
+
+                            routingFinal.push(routingLineFail);
+                        }
+
+                    }else {
+                        continue;
+                    }
+                }
+
+                btn.removeAttribute('disabled');
+                let resString = ''; //detail
+                let resString2 = ''; // for user message
+                let resStringCopy = '';
+                routingFinal.forEach( function( obj ) {
+                    resString += `No: ${obj.no} , Reason: ${obj.reason} , GL: ${obj.gl}</br>` ;
+
+                    // resString2 += `<div class="error_block"><h2>${obj.reason}</h2><br><h3>${obj.caption}</h3> &nbsp; ${obj.gl_name}</div><br>`
+                    resString2 += `<div class="error_block"><h2>${obj.reason}</h2><br> &nbsp; ${obj.gl_name}</div><br>`
+                    
+                    // resStringCopy += `${obj.caption}\r\n${obj.gl_name}\r\n\r\n`
+                    resStringCopy += `${obj.reason}\r\n${obj.gl_name}\r\n\r\n`
+                });
+                // document.querySelector('.result').innerHTML = resString;
+                document.querySelector('.result.usermessage').innerHTML = resString2;
+                //resString = '';
+
+                copyText = resStringCopy;
+            });
+
+            btnCopy.addEventListener('click', async function() {
+                try {
+                    await navigator.clipboard.writeText(copyText);
+                    console.log(this.innerText);
+                    this.innerText =  '已' + this.innerText;
+                    this.style.color = 'green';
+                    this.style.backgroundColor = 'wheat';
+
+                    setTimeout(() => {
+                        btnCopy.innerText =  '複製';
+                        btnCopy.style.color = '';
+                        btnCopy.style.backgroundColor = ''
+                    },1200)
+
+                } catch(err) {
+                    console.log(`Fail to copy: `, err);
+                }
+            })
+
+
+            async function getGLData() {
+                // let res = await axios.get('./data/gatewayData.json');
+                let res = await axios.get('./data/GatewayLine_min.json');
+                return res;
+            }
+
+            async function getRouteData() {
+                let res = await axios.get('./data/routeListData_min.json');
+                return res;
+            }
+        
+        })()
+        
+    </script>
+</body>
+</html>
