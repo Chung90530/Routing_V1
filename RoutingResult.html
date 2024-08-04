@@ -44,8 +44,6 @@
                 
                 content = content.replaceAll('\n',',')
 
-                // const contentObj = JSON.parse(content);
-                // console.log('L: 64  > glInfo: ', glInfo);
                 let  contentObj;
                 try {
                     contentObj = JSON.parse(content);
@@ -93,8 +91,9 @@
                             
                             //組 gateway line name
                             const failGLNameObj = glNAME.filter( gn => res.indexOf( gn.id) !== -1 )
+                            
                             const failGLNameArr = [];  
-
+                            console.log('L;97   failGLNameObj:', failGLNameObj);
                             for (const iterator of failGLNameObj) {
                                 // failGLNameArr.push(iterator.gatewaylinename);
                                 failGLNameArr.push(iterator.gatewayLineName);
@@ -123,10 +122,10 @@
                 let resStringCopy = '';
                 routingFinal.forEach( function( obj ) {
                     resString += `No: ${obj.no} , Reason: ${obj.reason} , GL: ${obj.gl}</br>` ;
-
+                    console.log(obj.no, obj.gl);
                     // resString2 += `<div class="error_block"><h2>${obj.reason}</h2><br><h3>${obj.caption}</h3> &nbsp; ${obj.gl_name}</div><br>`
                     resString2 += `<div class="error_block"><h2>${obj.reason}</h2><br> &nbsp; ${obj.gl_name}</div><br>`
-                    
+                    console.log(obj.reason , obj.gl_name);
                     // resStringCopy += `${obj.caption}\r\n${obj.gl_name}\r\n\r\n`
                     resStringCopy += `${obj.reason}\r\n${obj.gl_name}\r\n\r\n`
                 });
