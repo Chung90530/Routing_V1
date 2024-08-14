@@ -39,7 +39,8 @@
                 document.querySelector('.result').innerHTML = '';
                 
                 btn.setAttribute('disabled', true)
-
+                
+                //將使用者在rextarea輸入的資料轉為JSON格式
                 let content = `[${routingDataDom.value.trim()}]`;
                 
                 content = content.replaceAll('\n',',')
