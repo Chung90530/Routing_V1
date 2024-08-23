@@ -35,6 +35,7 @@
                 const routingFinal = [];
                 let glInfo = null;
                 let routeInfo = null;
+                let remainGL = null;
 
                 document.querySelector('.result').innerHTML = '';
                 
@@ -61,7 +62,7 @@
                     routeInfo = await getRouteData();
 
                 } catch(err) {
-                    console.log('L:54  axios err: ', err);
+                    console.log('L:64  axios err: ', err);
                     btn.removeAttribute('disabled');
 
                     return;
@@ -69,7 +70,7 @@
 
                
                 const glNAME = glInfo.data;
-                console.log('L: 60  > glNAME: ', glNAME);
+                console.log('L: 72  > glNAME: ', glNAME);
 
                 const routeErrorMessage = routeInfo.data;
 
@@ -82,7 +83,10 @@
                                 return changeData.afterFilterIdList.indexOf(num) === -1 ;
                             })
 
-                            console.log('res: ', res);                           
+                            remainGL = JSON.parse( JSON.stringify( changeData.afterFilterIdList ));
+                            console.log( 'remainGL: ', remainGL);
+
+                            console.log('L:85  res: ', res);                           
 
                             const routingLineFail = {}; 
 
@@ -94,10 +98,10 @@
                             const failGLNameObj = glNAME.filter( gn => res.indexOf( gn.id) !== -1 )
                             
                             const failGLNameArr = [];  
-                            console.log('L;97   failGLNameObj:', failGLNameObj);
+                            console.log('L:97   failGLNameObj:', failGLNameObj);
                             for (const iterator of failGLNameObj) {
                                 // failGLNameArr.push(iterator.gatewaylinename);
-                                failGLNameArr.push(iterator.gatewayLineName);
+                                failGLNameArr.push( `${iterator.gatewayLineName} ( ${iterator.id} )` );
                             }
 
                             routingLineFail['gl_name'] = failGLNameArr.join('、');
@@ -107,7 +111,7 @@
                             let errorReason = routeErrorMessage.filter( errorMes => errorMes.description === changeData.description )
                             routingLineFail['caption'] = errorReason[0].caption_en;
                             // console.log('L:96  errorReason: ', errorReason);
-                            // console.log('routingLineFail: ', routingLineFail);
+                            console.log('routingLineFail: ', routingLineFail);
 
                             routingFinal.push(routingLineFail);
                         }
@@ -117,21 +121,27 @@
                     }
                 }
 
+                const remainGLInfo = getGLName(remainGL, glNAME);
+
                 btn.removeAttribute('disabled');
                 let resString = ''; //detail
                 let resString2 = ''; // for user message
                 let resStringCopy = '';
+                let routingResult = `<h2> ${remainGL.length === 0 ? 'Routing Fail': 'Routing Success'} </h2>`
                 routingFinal.forEach( function( obj ) {
+
                     resString += `No: ${obj.no} , Reason: ${obj.reason} , GL: ${obj.gl}</br>` ;
                     console.log(obj.no, obj.gl);
                     // resString2 += `<div class="error_block"><h2>${obj.reason}</h2><br><h3>${obj.caption}</h3> &nbsp; ${obj.gl_name}</div><br>`
-                    resString2 += `<div class="error_block"><h2>${obj.reason}</h2><br> &nbsp; ${obj.gl_name}</div><br>`
+                    resString2 += `<div class="error_block"><h2>${obj.reason}</h2><h3>Total: ${obj.gl.length} </h3> &nbsp; ${obj.gl_name}</div><br>`
                     console.log(obj.reason , obj.gl_name);
                     // resStringCopy += `${obj.caption}\r\n${obj.gl_name}\r\n\r\n`
                     resStringCopy += `${obj.reason}\r\n${obj.gl_name}\r\n\r\n`
+
                 });
                 // document.querySelector('.result').innerHTML = resString;
-                document.querySelector('.result.usermessage').innerHTML = resString2;
+
+                document.querySelector('.result.usermessage').innerHTML = `${routingResult}  ${resString2}  ${remainGLInfo.length === 0 ? '': '<div class="demainGL"><h2>可用通道</h2><h3> Total:' + remainGLInfo.length +'</h3> &nbsp; '+ remainGLInfo.join('、') + '</div>' }`;
                 //resString = '';
 
                 copyText = resStringCopy;
@@ -156,6 +166,21 @@
                 }
             })
 
+
+            function getGLName(remainGL, allGlData ) {
+                const allGLMap = new Map( allGlData.map( gl => [gl.id, gl]) );
+                let remainInfo = [];
+                remainGL.forEach( glId => {
+                    if( allGLMap.get(glId) !== null) {
+                        const glObj = allGLMap.get(glId);
+                        remainInfo.push( `${glObj.gatewayLineName} ( ${glId} )`);
+                    } else {
+                        remainInfo.push( ` ????? ( ${glId} )`);
+                    }
+                })
+
+                return remainInfo;
+            }
 
             async function getGLData() {
                 // let res = await axios.get('./data/gatewayData.json');

@@ -8,7 +8,7 @@ h2, h3 {
     color: blue;
 }
 
-h2 {
+h2, h3 {
     padding: 8px;
 }
 
@@ -57,10 +57,20 @@ textarea {
     font-size: 20px;
 }
 
-.usermessage, .error_block {
+.usermessage, .error_block, .demainGL {
     padding: 10px;
 }
 
 .error_block {
     background-color:skyblue;
+}
+
+.result.usermessage > h2 {
+    padding: 10px;
+    text-align: center;
+    color: red;
+}
+
+.demainGL {
+    background-color:khaki;
 }
