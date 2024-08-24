@@ -9,13 +9,9 @@
 <body>
     <div class="main">
         <h2>Routing 解析</h2>
-        <div class="inputRouting">
-            <textarea  cols="120" rows="25" class="routingData mb-2"></textarea>
-
-            <button type="button" class="clear">清除</button>
-        </div>
-        
+        <textarea  cols="120" rows="25" class="routingData mb-2"></textarea>
         <button type="button" class="btn mb-7">送出</button>
+        <button type="button" class="clear">清除</button>
         
         <div class="showMessage flex">
             <div class="result usermessage"></div>
@@ -42,7 +38,7 @@
 
 
             btn.addEventListener('click', async () => {
-
+                if(routingDataDom.value === '') return alert('請輸入Routing history');
                 const routingFinal = [];
                 let glInfo = null;
                 let routeInfo = null;

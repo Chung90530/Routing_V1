@@ -36,7 +36,7 @@ textarea {
     padding: 6px;
 }
 
-.btn, .copy {
+.btn, .copy , .clear {
     padding: 10px;
     cursor: pointer;
 }
@@ -90,19 +90,26 @@ h2.fail{
 }
 
 .routingData {
-    min-width: 480px;
-    max-width: 100%;
+    /* width: 95vw; */
+    min-width: 400px;
+    max-width: 95vw;
+}
+
+button {
+    transition: all 0.5s;
 }
 
 .clear {
-    position:absolute;
-    right: 50px;
-    bottom: 30px;
-    padding: 5px;
-    font-size: 20px;
-    width: 100px;
-    height: 50px;
-    cursor: pointer;
+    width: 20%;
+}
+
+.btn {
+    width: 76%;
+    margin-right: 3%;
+}
+
+.btn:hover , .copy:hover {
+    background-color: wheat;
 }
 
 .clear:hover {
