@@ -9,13 +9,15 @@
 <body>
     <div class="main">
         <h2>Routing 解析</h2>
+        <div class="inputRouting">
+            <textarea  cols="120" rows="25" class="routingData mb-2"></textarea>
 
-        <textarea  cols="120" rows="25" class="routingData mb-2"></textarea>
+            <button type="button" class="clear">清除</button>
+        </div>
         
         <button type="button" class="btn mb-7">送出</button>
         
         <div class="showMessage flex">
-            <!-- <div class="result"></div> -->
             <div class="result usermessage"></div>
             <button class="copy">複製</button>
         </div>
@@ -28,7 +30,16 @@
             const routingDataDom = document.querySelector('.routingData');
             const btn = document.querySelector('.btn');
             const btnCopy = document.querySelector('.copy');
+            const clear = document.querySelector('.clear');
             let copyText = '';
+
+            clear.addEventListener('click', function() {
+                console.log(this);
+                routingDataDom.value = '';
+                document.querySelector('.usermessage').innerText = '';
+
+            })
+
 
             btn.addEventListener('click', async () => {
 
@@ -127,7 +138,8 @@
                 let resString = ''; //detail
                 let resString2 = ''; // for user message
                 let resStringCopy = '';
-                let routingResult = `<h2> ${remainGL.length === 0 ? 'Routing Fail': 'Routing Success'} </h2>`
+                // let routingResult = `<h2> ${remainGL.length === 0 ? 'Routing Fail': 'Routing Success'} </h2>`
+                let routingResult = remainGL.length === 0 ? `<h2 class="fail"> Routing Fail </h2>` : `<h2 class="success"> Routing Success </h2>`
                 routingFinal.forEach( function( obj ) {
 
                     resString += `No: ${obj.no} , Reason: ${obj.reason} , GL: ${obj.gl}</br>` ;

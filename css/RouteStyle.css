@@ -68,9 +68,44 @@ textarea {
 .result.usermessage > h2 {
     padding: 10px;
     text-align: center;
-    color: red;
+    
 }
 
 .demainGL {
     background-color:khaki;
 }
+
+h2.success{
+    color: forestgreen;
+}
+
+h2.fail{
+    color: red;
+}
+
+.inputRouting {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+}
+
+.routingData {
+    min-width: 480px;
+    max-width: 100%;
+}
+
+.clear {
+    position:absolute;
+    right: 50px;
+    bottom: 30px;
+    padding: 5px;
+    font-size: 20px;
+    width: 100px;
+    height: 50px;
+    cursor: pointer;
+}
+
+.clear:hover {
+    background-color:lightblue;
+}
+
