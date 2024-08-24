@@ -91,8 +91,9 @@ h2.fail{
 
 .routingData {
     /* width: 95vw; */
-    min-width: 400px;
+    /* min-width: 400px; */
     max-width: 95vw;
+    height: 420px;
 }
 
 button {
@@ -114,5 +115,20 @@ button {
 
 .clear:hover {
     background-color:lightblue;
+}
+
+@media (max-width:520px) {
+
+    .main {
+        padding: 10px 10px;
+    }
+
+    .btn, .clear {
+        width: 45%;
+    }
+
+    .routingData {
+        width: 95%;
+    }
 }
 
